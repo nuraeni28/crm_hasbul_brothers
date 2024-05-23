@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,5 @@ Route::post('logout/auth', [AuthController::class, 'logout']);
 // Route::middleware('authenticate')->group(function () {
     Route::get('/verify-token/{token}', [AuthController::class, 'verifyToken']);
     Route::get('/data-view', [DataViewController::class, 'dataView']);
+    Route::post('/user/list/view', [UserController::class, 'listUserView']);
 // });
