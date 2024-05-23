@@ -65,8 +65,6 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // if email already exists
-
             return response()->json(['message' => $validator->errors()], 422);
         }
         // Begin transaction
