@@ -118,4 +118,35 @@ class FrontDeskController extends Controller
             return response()->json(['message' => 'Error creating attendance'], 500);
         }
     }
+
+    public function listEdit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'attendId' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+        // Begin transaction
+        DB::beginTransaction();
+
+        try {
+            // Idelete attendance
+            ClientRcdAttendance::where('id', $request->attendId)->delete();
+
+            // Commit transaction
+            DB::commit();
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            // Rollback transaction in case of error
+            DB::rollBack();
+
+            // Log the exception
+            \Log::error('Error creating user: ' . $e->getMessage());
+
+            return response()->json(['message' => 'Error creating attendance'], 500);
+        }
+    }
 }

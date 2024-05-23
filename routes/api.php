@@ -31,4 +31,5 @@ Route::post('logout/auth', [AuthController::class, 'logout']);
     Route::post('/user/list/delete', [UserController::class, 'listUserDelete']);
     Route::post('/frontdesk/attendance/view', [FrontDeskController::class, 'listView']);
     Route::post('/frontdesk/attendance/add', [FrontDeskController::class, 'listAdd']);
+    Route::post('/frontdesk/attendance/edit', [FrontDeskController::class, 'listEdit']);
 // });
