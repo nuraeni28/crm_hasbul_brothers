@@ -53,10 +53,70 @@ class UserController extends Controller
     }
     public function listUserAdd(Request $request)
     {
-        //insert to user login
-        UserLogin::create(['acc_email' => $request->permissionEmail, 'acc_password' => $request->permissionPassword]);
+        $validator = Validator::make($request->all(), [
+            'permissionUserPermission' => 'required',
+            'permissionUserStatus' => 'required',
+            'permissionEmail' => 'required',
+            'permissionFirstName' => 'required',
+            'permissionLastName' => 'required',
+            'permissionContactNumber' => 'required',
+            'permissionBrithday' => 'required',
+            'permissionPassword' => 'nequired',
+        ]);
 
-        //insert to 
+        if ($validator->fails()) {
+            // if email already exists
+
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+        // Begin transaction
+        DB::beginTransaction();
+
+        try {
+            // Insert into usr_login
+            $userLogin = User::create([
+                'acc_email' => $request->permissionEmail,
+                'acc_password' => $request->permissionPassword,
+            ]);
+
+            // Retrieve the ID of the newly inserted usr_login record
+            $user_login_id = $userLogin->id;
+
+            // Insert into usr_detail
+            $userDetail = UserDetail::create([
+                'usr_fname' => $request->permissionFirstName,
+                'usr_lname' => $request->permissionLastName,
+                'usr_birth' => $request->permissionBrithday,
+                'usr_no_phone' => $request->permissionContactNumber,
+                'usr_code_phone' => '6',
+            ]);
+
+            // Retrieve the ID of the newly inserted usr_detail record
+            $user_detail_id = $userDetail->id;
+
+            // Insert into usr_main
+            UserMain::create([
+                'usr_login_id' => $user_login_id,
+                'usr_access_id' => $request->permissionUserPermission,
+                'client_detail_id' => '0',
+                'usr_acc_appear' => '1',
+                'usr_acc_status' => $request->permissionUserStatus,
+                'usr_detail_id' => $user_detail_id,
+            ]);
+
+            // Commit transaction
+            DB::commit();
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            // Rollback transaction in case of error
+            DB::rollBack();
+
+            // Log the exception
+            \Log::error('Error creating user: ' . $e->getMessage());
+
+            return response()->json(['message' => 'Error creating user'], 500);
+        }
     }
 
     public function listUserEdit(Request $request)
@@ -64,17 +124,17 @@ class UserController extends Controller
         // Validate the edit request
 
         $validator = Validator::make($request->all(), [
-            'permissionUserMainId' => 'required|integer',
-            'permissionUserPermission' => 'required|integer',
-            'permissionUserStatus' => 'required|integer',
-            'permissionUserLoginId' => 'required|integer',
-            'permissionEmail' => 'required|email',
-            'permissionFirstName' => 'required|string|max:255',
-            'permissionLastName' => 'nullable|string|max:255',
-            'permissionContactNumber' => 'required|string|max:20',
-            'permissionBrithday' => 'required|date',
-            'permissionPassword' => 'nullable|string|min:8',
-            'permissionUserDetailId' => 'required|integer',
+            'permissionUserMainId' => 'required',
+            'permissionUserPermission' => 'required',
+            'permissionUserStatus' => 'required',
+            'permissionUserLoginId' => 'required',
+            'permissionEmail' => 'required',
+            'permissionFirstName' => 'required',
+            'permissionLastName' => 'required',
+            'permissionContactNumber' => 'required',
+            'permissionBrithday' => 'required',
+            'permissionPassword' => 'required',
+            'permissionUserDetailId' => 'required',
         ]);
 
         if ($validator->fails()) {

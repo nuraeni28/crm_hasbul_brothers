@@ -26,4 +26,5 @@ Route::post('logout/auth', [AuthController::class, 'logout']);
     Route::get('/data-view', [DataViewController::class, 'dataView']);
     Route::post('/user/list/view', [UserController::class, 'listUserView']);
     Route::post('/user/list/edit', [UserController::class, 'listUserEdit']);
+    Route::post('/user/list/add', [UserController::class, 'listUserAdd']);
 // });
