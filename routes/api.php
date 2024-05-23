@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FrontDeskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,5 @@ Route::post('logout/auth', [AuthController::class, 'logout']);
     Route::post('/user/list/edit', [UserController::class, 'listUserEdit']);
     Route::post('/user/list/add', [UserController::class, 'listUserAdd']);
     Route::post('/user/list/delete', [UserController::class, 'listUserDelete']);
+    Route::post('/frontdesk/attendance/view', [FrontDeskController::class, 'listView']);
 // });

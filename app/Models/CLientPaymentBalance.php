@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientPaymentBalance extends Model
 {
     use HasFactory;
+     protected $table = 'client_payment_balance';
 
     protected $fillable = [
         'client_main_id',

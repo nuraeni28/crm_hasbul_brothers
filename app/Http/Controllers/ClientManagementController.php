@@ -8,7 +8,7 @@ use App\Models\ProspectDetail;
 use App\Models\PreferencePackage;
 use Illuminate\Http\Request;
 
-class ClientManagement extends Controller
+class ClientManagementController extends Controller
 {
     public function dataView()
     {

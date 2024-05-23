@@ -9,6 +9,7 @@ class ClientMain extends Model
 {
     use HasFactory;
 
+     protected $table = 'client_main';
     protected $fillable = [
         'closed_by',
         'client_status',
@@ -34,5 +35,9 @@ class ClientMain extends Model
     public function clientPaymentBalance()
     {
         return $this->hasMany(ClientPaymentBalance::class);
+    }
+      public function clientAttendance()
+    {
+        return $this->hasMany(ClientRcdAttendance::class, 'client_main_id');
     }
 }
