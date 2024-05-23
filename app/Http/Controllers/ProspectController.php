@@ -143,4 +143,39 @@ class ProspectController extends Controller
             return response()->json(['message' => 'Error edit prospect'], 500);
         }
     }
+    public function listDelete(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'pId' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+        // Begin transaction
+        DB::beginTransaction();
+
+        try {
+            // check prospect detail
+            $checkId = ProspectDetail::where('id', $request->pId)->first();
+
+            if (!$checkId) {
+                return response()->json(['message' => 'prospect detail not found'], 440);
+            }
+
+            ProspectDetail::where('id', $request->pId)->delete();
+            // Commit transaction
+            DB::commit();
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            // Rollback transaction in case of error
+            DB::rollBack();
+
+            // Log the exception
+            \Log::error('Error delete prospect detail: ' . $e->getMessage());
+
+            return response()->json(['message' => 'Error delete prospect'], 500);
+        }
+    }
 }
