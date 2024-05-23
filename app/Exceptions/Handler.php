@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
 {
     if ($exception instanceof MethodNotAllowedHttpException) {
-        return response()->json(['error' => 'Metode tidak diizinkan'], 405);
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 
     return parent::render($request, $exception);

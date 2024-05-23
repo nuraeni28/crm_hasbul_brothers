@@ -61,7 +61,7 @@ class UserController extends Controller
             'permissionLastName' => 'required',
             'permissionContactNumber' => 'required',
             'permissionBrithday' => 'required',
-            'permissionPassword' => 'nequired',
+            'permissionPassword' => 'required',
         ]);
 
         if ($validator->fails()) {
