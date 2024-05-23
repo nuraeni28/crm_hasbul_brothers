@@ -40,5 +40,7 @@ Route::prefix('frontdesk/attendance')->group(function () {
 });
 Route::prefix('prospect-management/list')->group(function () {
     Route::post('/view', [ProspectController::class, 'listView']);
+    Route::post('/add', [ProspectController::class, 'listAdd']);
+    Route::post('/edit', [ProspectController::class, 'listEdit']);
 });
 // });

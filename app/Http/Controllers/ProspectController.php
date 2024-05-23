@@ -20,22 +20,24 @@ class ProspectController extends Controller
 
         foreach ($list_events as $list_event) {
             $dataArray1[] = [
-                'id' => $list_event->id,
+                'id' => (string) $list_event->id,
                 'event_name' => $list_event->event_name,
             ];
         }
+
         foreach ($list_classes as $list_class) {
-            $dataArray1[] = [
-                'id' => $list_class->id,
+            $dataArray2[] = [
+                'id' => (string) $list_class->id,
                 'full_name' => $list_class->full_name,
                 'contact_number' => $list_class->contact_number,
-                'niche_market' => $list_event->niche_market,
-                'brand_name' => $list_event->brand_name,
-                'event' => $list_class->event_id,
-                'prospect_status' => $list_class->prospect_status,
-                'sales_avg' => $list_class['sales_avg'],
+                'niche_market' => $list_class->niche_market,
+                'brand_name' => $list_class->brand_name,
+                'event' => (string) $list_class->event_id,
+                'prospect_status' => (string) $list_class->prospect_status,
+                'sales_avg' => (string) $list_class->sales_avg,
             ];
         }
+
         return response()->json(
             [
                 'message' => 'success',
@@ -49,8 +51,13 @@ class ProspectController extends Controller
     public function listAdd(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'classId' => 'required',
-            'clientId' => 'required',
+            'pFullName' => 'required',
+            'pBusinessIndustry' => 'required',
+            'pContactNumber' => 'required',
+            'pEventName' => 'required',
+            'pBrandName' => 'required',
+            'pSalesAverage' => 'required',
+            'pStatus' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -60,11 +67,15 @@ class ProspectController extends Controller
         DB::beginTransaction();
 
         try {
-            // Insert into attendance
-            ClientRcdAttendance::create([
-                'class_id' => $request->classId,
-                'client_main_id' => $request->clientId,
-                'attend_date' => now(),
+            // Insert into prospect detail
+            ProspectDetail::create([
+                'full_name' => $request->pFullName,
+                'contact_number' => $request->pContactNumber,
+                'niche_market' => $request->pBusinessIndustry,
+                'brand_name' => $request->pBrandName,
+                'event_id' => $request->pEventName,
+                'sales_avg' => $request->pSalesAverage,
+                'prospect_status' => $request->pStatus,
             ]);
 
             // Commit transaction
@@ -76,16 +87,23 @@ class ProspectController extends Controller
             DB::rollBack();
 
             // Log the exception
-            \Log::error('Error creating user: ' . $e->getMessage());
+            \Log::error('Error creating prospect detail : ' . $e->getMessage());
 
-            return response()->json(['message' => 'Error creating attendance'], 500);
+            return response()->json(['message' => 'Error creating prospect detail'], 500);
         }
     }
 
     public function listEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'attendId' => 'required',
+            'pFullName' => 'required',
+            'pBusinessIndustry' => 'required',
+            'pContactNumber' => 'required',
+            'pEventName' => 'required',
+            'pBrandName' => 'required',
+            'pSalesAverage' => 'required',
+            'pStatus' => 'required',
+            'pId' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -95,9 +113,22 @@ class ProspectController extends Controller
         DB::beginTransaction();
 
         try {
-            // Idelete attendance
-            ClientRcdAttendance::where('id', $request->attendId)->delete();
+            // check prospect detail
+            $checkId = ProspectDetail::where('id', $request->pId)->first();
 
+            if (!$checkId) {
+                return response()->json(['message' => 'prospect detail not found'], 440);
+            }
+
+            ProspectDetail::where('id', $request->pId)->update([
+                'full_name' => $request->pFullName,
+                'contact_number' => $request->pContactNumber,
+                'niche_market' => $request->pBusinessIndustry,
+                'brand_name' => $request->pBrandName,
+                'event_id' => $request->pEventName,
+                'sales_avg' => $request->pSalesAverage,
+                'prospect_status' => $request->pStatus,
+            ]);
             // Commit transaction
             DB::commit();
 
@@ -107,9 +138,9 @@ class ProspectController extends Controller
             DB::rollBack();
 
             // Log the exception
-            \Log::error('Error creating user: ' . $e->getMessage());
+            \Log::error('Error edit prospect detail: ' . $e->getMessage());
 
-            return response()->json(['message' => 'Error creating attendance'], 500);
+            return response()->json(['message' => 'Error edit prospect'], 500);
         }
     }
 }

@@ -113,7 +113,7 @@ class FrontDeskController extends Controller
             DB::rollBack();
 
             // Log the exception
-            \Log::error('Error creating user: ' . $e->getMessage());
+            \Log::error('Error creating attendance: ' . $e->getMessage());
 
             return response()->json(['message' => 'Error creating attendance'], 500);
         }
@@ -144,9 +144,9 @@ class FrontDeskController extends Controller
             DB::rollBack();
 
             // Log the exception
-            \Log::error('Error creating user: ' . $e->getMessage());
+            \Log::error('Error delete attendance : ' . $e->getMessage());
 
-            return response()->json(['message' => 'Error creating attendance'], 500);
+            return response()->json(['message' => 'Error delete attendance'], 500);
         }
     }
 }

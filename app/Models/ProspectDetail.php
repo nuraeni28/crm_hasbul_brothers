@@ -11,5 +11,5 @@ class ProspectDetail extends Model
 
     protected $table = 'prospect_detail';
 
-    protected $fillable = ['event_id', 'full_name', 'contact_number', 'niche_market', 'sales_avg', 'prospect_status'];
+    protected $fillable = ['event_id', 'full_name', 'contact_number', 'niche_market', 'sales_avg', 'prospect_status', 'brand_name'];
 }
