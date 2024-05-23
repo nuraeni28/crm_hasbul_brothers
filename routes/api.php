@@ -27,4 +27,5 @@ Route::post('logout/auth', [AuthController::class, 'logout']);
     Route::post('/user/list/view', [UserController::class, 'listUserView']);
     Route::post('/user/list/edit', [UserController::class, 'listUserEdit']);
     Route::post('/user/list/add', [UserController::class, 'listUserAdd']);
+    Route::post('/user/list/delete', [UserController::class, 'listUserDelete']);
 // });

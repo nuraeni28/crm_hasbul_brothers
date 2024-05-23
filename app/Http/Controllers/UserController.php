@@ -184,4 +184,18 @@ class UserController extends Controller
             return response()->json(['message' => 'Error updating user'], 500);
         }
     }
+
+    public function listUserDelete(Request $request)
+    {
+        $userMain = UserMain::find($request->userId);
+        if ($userMain) {
+            $userMain->usr_acc_status = 4;
+            $userMain->save();
+
+            return response()->json(['message' => 'success'], 200);
+        } else {
+            // Handle the case where the user is not found
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    }
 }
