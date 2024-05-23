@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserMain;
+use App\Models\User;
+use App\Models\UserDetail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -22,6 +26,7 @@ class UserController extends Controller
             ->select('id as usr_main_id', 'usr_detail_id', 'usr_login_id', 'usr_access_id', 'usr_acc_status')
             ->where('client_detail_id', '=', '0')
             ->get();
+
         // Transform the data
         $transformedUsers = $listUsers->map(function ($user) {
             return [
@@ -45,5 +50,78 @@ class UserController extends Controller
             ],
             200,
         );
+    }
+    public function listUserAdd(Request $request)
+    {
+        //insert to user login
+        UserLogin::create(['acc_email' => $request->permissionEmail, 'acc_password' => $request->permissionPassword]);
+
+        //insert to 
+    }
+
+    public function listUserEdit(Request $request)
+    {
+        // Validate the edit request
+
+        $validator = Validator::make($request->all(), [
+            'permissionUserMainId' => 'required|integer',
+            'permissionUserPermission' => 'required|integer',
+            'permissionUserStatus' => 'required|integer',
+            'permissionUserLoginId' => 'required|integer',
+            'permissionEmail' => 'required|email',
+            'permissionFirstName' => 'required|string|max:255',
+            'permissionLastName' => 'nullable|string|max:255',
+            'permissionContactNumber' => 'required|string|max:20',
+            'permissionBrithday' => 'required|date',
+            'permissionPassword' => 'nullable|string|min:8',
+            'permissionUserDetailId' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            // if email already exists
+
+            return response()->json(['message' => $validator->errors()], 422);
+        }
+        // Begin transaction
+        DB::beginTransaction();
+
+        try {
+            UserMain::where('id', $request->permissionUserMainId)->update([
+                'usr_access_id' => $request->permissionUserPermission,
+                'usr_acc_status' => $request->permissionUserStatus,
+            ]);
+
+            //update user login
+            $userLoginData = [
+                'acc_email' => $request->permissionEmail,
+            ];
+
+            if (!empty($request->permissionPassword)) {
+                $userLoginData['acc_password'] = $request->permissionPassword;
+            }
+
+            User::where('id', $request->permissionUserLoginId)->update($userLoginData);
+
+            //update user detail
+            UserDetail::where('id', $request->permissionUserDetailId)->update([
+                'usr_fname' => $request->permissionFirstName,
+                'usr_lname' => $request->permissionLastName,
+                'usr_no_phone' => $request->permissionContactNumber,
+                'usr_birth' => $request->permissionBrithday,
+            ]);
+
+            // Commit transaction
+            DB::commit();
+
+            return response()->json(['message' => 'success'], 200);
+        } catch (\Exception $e) {
+            //throw $th;
+            // Rollback transaction
+            DB::rollBack();
+
+            // Log the exception and return an error response
+            \Log::error('Error updating user: ' . $e->getMessage());
+            return response()->json(['message' => 'Error updating user'], 500);
+        }
     }
 }
