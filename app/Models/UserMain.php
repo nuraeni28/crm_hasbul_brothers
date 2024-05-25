@@ -12,18 +12,23 @@ class UserMain extends Model
     protected $table = 'usr_main';
     protected $fillable = ['usr_acc_status', 'usr_login_id', 'usr_access_id', 'usr_detail_id', 'client_detail_id', 'usr_acc_appear'];
 
-    public function login()
+   /**
+     * Get the user detail associated with the user main.
+     */
+    public function userDetail()
     {
-        return $this->belongsTo(User::class, 'usr_login_id');
+        return $this->hasOne(UserDetail::class,  'id');
     }
 
-    public function detail()
+    /**
+     * Get the user access associated with the user main.
+     */
+    public function userAccess()
     {
-        return $this->belongsTo(UserDetail::class, 'usr_detail_id');
+        return $this->hasOne(UserAccess::class,  'id');
     }
-
-    public function access()
+    public function userLogin()
     {
-        return $this->belongsTo(UserAccess::class, 'usr_access_id');
+        return $this->hasOne(User::class, 'id');
     }
 }

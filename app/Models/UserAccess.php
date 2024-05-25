@@ -12,8 +12,8 @@ class UserAccess extends Model
     protected $table = 'usr_access';
 
     protected $fillable = ['access_name', 'access_privilege', 'access_status', 'trainer_status', 'seller_status'];
-    public function main()
+      public function user()
     {
-        return $this->hasOne(UserMain::class, 'usr_access_id');
+        return $this->belongsTo(UserMain::class, 'id');
     }
 }

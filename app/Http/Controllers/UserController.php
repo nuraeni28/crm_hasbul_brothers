@@ -13,13 +13,13 @@ class UserController extends Controller
     public function listUserView(Request $request)
     {
         $listUsers = UserMain::with([
-            'login' => function ($query) {
+            'userLogin' => function ($query) {
                 $query->select('id', 'acc_email');
             },
-            'detail' => function ($query) {
+            'userDetail' => function ($query) {
                 $query->select('id', 'usr_fname', 'usr_lname', 'usr_birth', 'usr_code_phone', 'usr_no_phone');
             },
-            'access' => function ($query) {
+            'userAccess' => function ($query) {
                 $query->select('id');
             },
         ])
