@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FrontDeskController;
 use App\Http\Controllers\ProspectController;
+use App\Http\Controllers\ClientManagementController;
+use App\Http\Controllers\PreferenceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

@@ -27,16 +27,6 @@ class ClientManagementController extends Controller
 {
     public function dataView(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-       
-        if (!$checkToken) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 404);
-        }
-
         $clientLists = ClientMain::with([
             'clientDetail',
             'clientCompany',
@@ -101,8 +91,8 @@ class ClientManagementController extends Controller
         $dataArray2 = $listUsers->map(function ($user) {
             return [
                 "usr_main_id" => $user->id,
-                "first_name" => $user->userDetail->usr_fname,
-                "last_name" => $user->userDetail->usr_lname,
+                "first_name" => $user->userDetail->usr_fname ?? '',
+                "last_name" => $user->userDetail->usr_lname ?? '',
             ];
         });
         $listParticipants = ProspectDetail::orderBy('full_name')->get();
