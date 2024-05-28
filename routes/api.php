@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/photo/view', [ClientManagementController::class, 'photoView']);
         Route::post('/photo/add', [ClientManagementController::class, 'photoAdd']);
 
+        Route::post('/profile_pic/edit', [ClientManagementController::class, 'uploadProfilePic']);
         Route::post('/dashboard/view', [ClientManagementController::class, 'dashboardView']);
     });
     Route::prefix('preference')->group(function () {

@@ -20,20 +20,6 @@ class PreferenceController extends Controller
 {
     public function schedulerView(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        // dd($token);
-        // Check if the token exists in the database
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $dataArray1 = [];
         $dataArray2 = [];
 
@@ -313,33 +299,20 @@ class PreferenceController extends Controller
     }
     public function packageAdd(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                401,
-            );
-        }
         $image1_filepath = null;
         $image2_filepath = null;
 
-        if ($request->hasFile('photo1')) {
-            $file1 = $request->file('photo1');
+        if ($request->file('photo1')) {
+            $file1 = $request->file('photo1')[0]['file'];
             $filename1 = 'img_icon-' . now()->format('Y-m-d-H-i-s') . '.' . $file1->getClientOriginalExtension();
-            Storage::disk('s3')->put(env('AWS_BUCKET_PATH_CLIENT_DETAILS_ADD') . $filename1, file_get_contents($file1));
+            Storage::disk('s3')->put('hb-crm/image_client_detail/' . $filename1, file_get_contents($file1));
             $image1_filepath = $filename1;
         }
 
-        if ($request->hasFile('photo2')) {
-            $file2 = $request->file('photo2');
+        if ($request->file('photo2')) {
+            $file2 = $request->file('photo2')[0]['file'];
             $filename2 = 'img_banner-' . now()->format('Y-m-d-H-i-s') . '.' . $file2->getClientOriginalExtension();
-            Storage::disk('s3')->put(env('AWS_BUCKET_PATH_CLIENT_DETAILS_ADD') . $filename2, file_get_contents($file2));
+            Storage::disk('s3')->put('hb-crm/image_client_detail/' . $filename2, file_get_contents($file2));
             $image2_filepath = $filename2;
         }
 
@@ -366,33 +339,21 @@ class PreferenceController extends Controller
     }
     public function packageEdit(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                401,
-            );
-        }
-
         $filename1 = null;
         $filename2 = null;
 
-        if ($request->hasFile('photo1')) {
-            $file1 = $request->file('photo1');
+        if ($request->file('photo1')) {
+            $file1 = $request->file('photo1')[0]['file'];
             $filename1 = 'img_icon-' . now()->format('Y-m-d-H-i-s') . '.' . $file1->getClientOriginalExtension();
-            Storage::disk('s3')->put(env('AWS_BUCKET_PATH_CLIENT_DETAILS_ADD') . $filename1, file_get_contents($file1));
+            Storage::disk('s3')->put('hb-crm/image_client_detail/' . $filename1, file_get_contents($file1));
+            $image1_filepath = $filename1;
         }
 
-        if ($request->hasFile('photo2')) {
-            $file2 = $request->file('photo2');
+        if ($request->file('photo2')) {
+            $file2 = $request->file('photo2')[0]['file'];
             $filename2 = 'img_banner-' . now()->format('Y-m-d-H-i-s') . '.' . $file2->getClientOriginalExtension();
-            Storage::disk('s3')->put(env('AWS_BUCKET_PATH_CLIENT_DETAILS_ADD') . $filename2, file_get_contents($file2));
+            Storage::disk('s3')->put('hb-crm/image_client_detail/' . $filename2, file_get_contents($file2));
+            $image2_filepath = $filename2;
         }
 
         $data_form = $request->all();
@@ -420,19 +381,6 @@ class PreferenceController extends Controller
     }
     public function packageDelete(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                401,
-            );
-        }
         $deleted = DB::table('preference_package')
             ->where('id', $request->packageId)
             ->delete();
@@ -447,29 +395,6 @@ class PreferenceController extends Controller
     public function classView(Request $request)
     {
         try {
-            $authorizationHeader = $request->header('Authorization');
-
-            if (!$authorizationHeader) {
-                return response()->json(
-                    [
-                        'message' => 'Authorization header not found',
-                    ],
-                    400,
-                );
-            }
-
-            $token = str_replace('Bearer ', '', $authorizationHeader);
-            $checkToken = UserToken::where('usr_token', $token)->first();
-
-            if (!$checkToken) {
-                return response()->json(
-                    [
-                        'message' => 'Unauthorized',
-                    ],
-                    401,
-                );
-            }
-
             $list_classes = PreferenceClass::orderBy('class_date_start', 'DESC')->get();
 
             $data_array1 = $list_classes->map(function ($class) {
@@ -532,27 +457,6 @@ class PreferenceController extends Controller
 
     public function classAdd(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-
-        if (!$authorizationHeader) {
-            return response()->json(
-                [
-                    'message' => 'Authorization header not found',
-                ],
-                400,
-            );
-        }
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                401,
-            );
-        }
-
         try {
             $preferenceClass = new PreferenceClass();
             $preferenceClass->class_name = $request->input('className');
@@ -589,19 +493,6 @@ class PreferenceController extends Controller
     public function classEdit(Request $request)
     {
         try {
-            $authorizationHeader = $request->header('Authorization');
-
-            $token = str_replace('Bearer ', '', $authorizationHeader);
-            $checkToken = UserToken::where('usr_token', $token)->first();
-            if (!$checkToken) {
-                return response()->json(
-                    [
-                        'message' => 'Unauthorized',
-                    ],
-                    401,
-                );
-            }
-
             $preferenceClass = PreferenceClass::find($request->input('classId'));
             $preferenceClass->class_name = $request->input('className');
             $preferenceClass->class_badge = $request->input('classBadge');
@@ -636,19 +527,6 @@ class PreferenceController extends Controller
     public function classDelete(Request $request)
     {
         try {
-            $authorizationHeader = $request->header('Authorization');
-
-            $token = str_replace('Bearer ', '', $authorizationHeader);
-            $checkToken = UserToken::where('usr_token', $token)->first();
-            if (!$checkToken) {
-                return response()->json(
-                    [
-                        'message' => 'Unauthorized',
-                    ],
-                    401,
-                );
-            }
-
             $preferenceClass = PreferenceClass::find($request->input('classId'));
 
             if (!$preferenceClass) {

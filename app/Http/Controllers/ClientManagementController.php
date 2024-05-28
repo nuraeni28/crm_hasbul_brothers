@@ -513,18 +513,6 @@ class ClientManagementController extends Controller
     }
     public function salesEdit(Request $request)
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $data = $request->input('monthSales');
 
         foreach ($data as $client_record_month) {
@@ -538,18 +526,6 @@ class ClientManagementController extends Controller
     }
     public function salesDelete(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('clientId');
         $year = $request->input('year');
 
@@ -563,18 +539,6 @@ class ClientManagementController extends Controller
     }
     public function successView(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
 
         $clientSuccessRecords = DB::table('client_rcd_success_story')->where('client_main_id', $clientId)->orderBy('success_date', 'desc')->get();
@@ -602,18 +566,6 @@ class ClientManagementController extends Controller
     }
     public function successAdd(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
         $date = $request->input('date');
         $title = $request->input('title');
@@ -631,18 +583,6 @@ class ClientManagementController extends Controller
 
     public function successEdit(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $storyId = $request->input('story_id');
         $date = $request->input('date');
         $title = $request->input('title');
@@ -660,18 +600,6 @@ class ClientManagementController extends Controller
     }
     public function successDelete(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $storyId = $request->input('story_id');
 
         $successStory = DB::table('client_rcd_success_story')->where('id', $storyId)->first();
@@ -687,18 +615,6 @@ class ClientManagementController extends Controller
 
     public function progressView(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
 
         $clientProgressRecords = DB::table('client_rcd_progress')->where('client_main_id', $clientId)->orderBy('progress_date', 'desc')->get();
@@ -728,18 +644,6 @@ class ClientManagementController extends Controller
     }
     public function progressAdd(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
         $role = $request->input('role');
         $date = $request->input('date');
@@ -761,18 +665,6 @@ class ClientManagementController extends Controller
 
     public function progressEdit(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $progressId = $request->input('progress_id');
         $role = $request->input('role');
         $date = $request->input('date');
@@ -794,19 +686,6 @@ class ClientManagementController extends Controller
     }
     public function progressDelete(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
-
         $progressId = $request->input('progress_id');
         $progress = DB::table('client_rcd_progress')->where('id', $progressId)->first();
 
@@ -821,18 +700,6 @@ class ClientManagementController extends Controller
 
     public function attendanceView(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
 
         $classLists = DB::table('preference_class')->orderBy('id', 'asc')->get();
@@ -867,18 +734,6 @@ class ClientManagementController extends Controller
     }
     public function btmView(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
 
         $clientBtmRecords = DB::table('client_rcd_btm')->where('client_main_id', $clientId)->first();
@@ -911,18 +766,6 @@ class ClientManagementController extends Controller
     }
     public function btmEdit(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
 
         $clientBtmRecords = DB::table('client_rcd_btm')->where('client_main_id', $clientId)->first();
@@ -949,18 +792,6 @@ class ClientManagementController extends Controller
     }
     public function photoView(Request $request): JsonResponse
     {
-        $authorizationHeader = $request->header('Authorization');
-        $token = str_replace('Bearer ', '', $authorizationHeader);
-        $checkToken = UserToken::where('usr_token', $token)->first();
-
-        if (!$checkToken) {
-            return response()->json(
-                [
-                    'message' => 'Unauthorized',
-                ],
-                404,
-            );
-        }
         $clientId = $request->input('client_id');
 
         $clientPhotoRecords = DB::table('client_rcd_photo')->where('client_main_id', $clientId)->get();
@@ -988,46 +819,65 @@ class ClientManagementController extends Controller
 
         return response()->json(['message' => 'success', 'data' => $data_array2], 200);
     }
-    public function photoAdd(Request $request)
+    public function photoAdd(Request $request): JsonResponse
     {
         $clientId = $request->input('clientId');
         $category = $request->input('category');
         $newCategory = $request->input('new_category');
+        // dd($request->hasfile('photo'));
+        if (is_array($request->file('photo'))) {
+            $file = $request->file('photo')[0]['file'] ?? null;
 
-        Log::info('uploadPhoto called with input:', $request->all());
-
-        
-        if ($request->hasFile('photo.0.file')) {
-            $file = $request->file('photo.0.file');
-
-            if ($file->isValid()) {
-                // Generate nama file yang unik
+            if ($file && $file->isValid()) {
                 $filename = 'photo_client_profile-' . date('Y-m-d-H-i-s') . '.' . $file->getClientOriginalExtension();
-
-                // Simpan file ke S3
-                Storage::disk('s3')->put($filename, file_get_contents($file), 'public');
-
-                // Jika kategori adalah 'addCategory', gunakan kategori baru
+                $folderPath = 'hb-crm/image_client_detail/';
+                $filePath = $folderPath . $filename;
+                Storage::disk('s3')->put($filePath, file_get_contents($file));
+                // $this->uploadToS3($file, $filename);
                 if ($category === 'addCategory') {
                     $category = $newCategory;
                 }
-
-                // Buat entri di database
-                ClientRcdPhoto::create([
+                CLientRcdPhoto::create([
                     'client_main_id' => $clientId,
                     'photo_category' => $category,
                     'img_path' => $filename,
                 ]);
-
-                Log::info('File uploaded successfully.');
                 return response()->json(['message' => 'File uploaded successfully'], 200);
             } else {
-                Log::warning('Invalid file provided.');
                 return response()->json(['message' => 'Invalid file provided'], 400);
             }
         } else {
-            Log::warning('No photo file provided.');
             return response()->json(['message' => 'No photo file provided'], 400);
+        }
+
+        return response()->json(['message' => 'success'], 200);
+    }
+
+    public function uploadProfilePic(Request $request)
+    {
+        try {
+            if ($request->file('profile_pic')) {
+                $file = $request->file('profile_pic')[0]['file'];
+                $filename = 'profile_img-' . now()->format('Y-m-d-H-i-s') . '.' . $file->getClientOriginalExtension();
+                $filePath = 'hb-crm/image_user/' . $filename;
+
+                // Mengunggah file ke S3
+                Storage::disk('s3')->put($filePath, file_get_contents($file));
+
+                // Memperbarui database
+                $client = ClientDetail::find($request->input('client_id'));
+                $client->profile_pic = $filename;
+                $client->save();
+
+                return response()->json(['message' => 'File uploaded successfully'], 200);
+            } else {
+                return response()->json(['message' => 'No profile picture provided'], 400);
+            }
+        } catch (Exception $e) {
+            // Logging the exception
+            Log::error('File upload error: ' . $e->getMessage());
+
+            return response()->json(['message' => 'An error occurred while uploading the profile picture.'], 500);
         }
     }
 }
