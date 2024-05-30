@@ -10,6 +10,7 @@ use App\Models\ClientRcdPackage;
 use App\Models\CLientRcdPhoto;
 use App\Models\ClientRcdSales;
 use App\Models\ClientRcdSuccessStory;
+use App\Models\ClientRcdProgress;
 use App\Models\UserMain;
 use App\Models\ProspectDetail;
 use App\Models\PreferencePackage;
@@ -541,7 +542,7 @@ class ClientManagementController extends Controller
     {
         $clientId = $request->input('client_id');
 
-        $clientSuccessRecords = DB::table('client_rcd_success_story')->where('client_main_id', $clientId)->orderBy('success_date', 'desc')->get();
+        $clientSuccessRecords = ClientRcdSuccessStory::where('client_main_id', $clientId)->orderBy('success_date', 'desc')->get();
 
         $data_array = [];
         foreach ($clientSuccessRecords as $record) {
@@ -571,7 +572,7 @@ class ClientManagementController extends Controller
         $title = $request->input('title');
         $details = $request->input('details');
 
-        DB::table('client_rcd_success_story')->insert([
+        ClientRcdSuccessStory::insert([
             'client_main_id' => $clientId,
             'success_date' => $date,
             'success_title' => $title,
@@ -588,13 +589,11 @@ class ClientManagementController extends Controller
         $title = $request->input('title');
         $details = $request->input('details');
 
-        DB::table('client_rcd_success_story')
-            ->where('id', $storyId)
-            ->update([
-                'success_date' => $date,
-                'success_title' => $title,
-                'success_detail' => $details,
-            ]);
+        ClientRcdSuccessStory::where('id', $storyId)->update([
+            'success_date' => $date,
+            'success_title' => $title,
+            'success_detail' => $details,
+        ]);
 
         return response()->json(['message' => 'success'], 200);
     }
@@ -602,13 +601,13 @@ class ClientManagementController extends Controller
     {
         $storyId = $request->input('story_id');
 
-        $successStory = DB::table('client_rcd_success_story')->where('id', $storyId)->first();
+        $successStory = ClientRcdSuccessStory::where('id', $storyId)->first();
 
         if (!$successStory) {
             return response()->json(['message' => 'Success story not found'], 404);
         }
 
-        DB::table('client_rcd_success_story')->where('id', $storyId)->delete();
+        ClientRcdSuccessStory::where('id', $storyId)->delete();
 
         return response()->json(['message' => 'success'], 200);
     }
@@ -617,7 +616,7 @@ class ClientManagementController extends Controller
     {
         $clientId = $request->input('client_id');
 
-        $clientProgressRecords = DB::table('client_rcd_progress')->where('client_main_id', $clientId)->orderBy('progress_date', 'desc')->get();
+        $clientProgressRecords = ClientRcdProgress::where('client_main_id', $clientId)->orderBy('progress_date', 'desc')->get();
 
         $data_array = [];
         foreach ($clientProgressRecords as $record) {
@@ -651,7 +650,7 @@ class ClientManagementController extends Controller
         $currentIssues = $request->input('current_issues');
         $solution = $request->input('solution');
 
-        DB::table('client_rcd_progress')->insert([
+        ClientRcdProgress::insert([
             'client_main_id' => $clientId,
             'usr_access_id' => $role,
             'progress_date' => $date,
@@ -672,28 +671,26 @@ class ClientManagementController extends Controller
         $currentIssues = $request->input('current_issues');
         $solution = $request->input('solution');
 
-        DB::table('client_rcd_progress')
-            ->where('id', $progressId)
-            ->update([
-                'usr_access_id' => $role,
-                'progress_date' => $date,
-                'speaker_pic' => $speaker,
-                'current_issue' => $currentIssues,
-                'current_solution' => $solution,
-            ]);
+        ClientRcdProgress::where('id', $progressId)->update([
+            'usr_access_id' => $role,
+            'progress_date' => $date,
+            'speaker_pic' => $speaker,
+            'current_issue' => $currentIssues,
+            'current_solution' => $solution,
+        ]);
 
         return response()->json(['message' => 'success'], 200);
     }
     public function progressDelete(Request $request): JsonResponse
     {
         $progressId = $request->input('progress_id');
-        $progress = DB::table('client_rcd_progress')->where('id', $progressId)->first();
+        $progress = ClientRcdProgress::where('id', $progressId)->first();
 
         if (!$progress) {
             return response()->json(['message' => 'Progress record not found'], 404);
         }
 
-        DB::table('client_rcd_progress')->where('id', $progressId)->delete();
+        ClientRcdProgress::where('id', $progressId)->delete();
 
         return response()->json(['message' => 'success'], 200);
     }
